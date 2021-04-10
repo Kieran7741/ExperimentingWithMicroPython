@@ -5,14 +5,91 @@ the perfect starting point. I have previously messed around with Arduinos while 
 
 The aim for this repo is to document my experimentation with MicroPython and hopefully create some cool projects.
 
+### Setting up your enviornment to work with ESP32 on Mac
+
+The following driver needs to be installed to communicate with the ESP32 on Mac: 
+https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers
+
+Running `ls /dev/tty.*` should return something like
+```commandline
+/dev/tty.Bluetooth-Incoming-Port	
+/dev/tty.SLAB_USBtoUART #ESP32
+/dev/tty.usbserial-0001 #ESP32
+```
+Both of the above marked ports can now be used to communicate with the ESP32
+
+#### Get Micropython onto your board
+Download a `micropython` binary from [here](https://micropython.org/download/esp32/). Select the latest stable release.
+
+Using `pip` you should now install the `esptool`. This allows you to write the `micropython` bin to your `ESP32`.
+Run the following commands:
+```commandline
+# Clear the boards flash
+esptool.py --port /dev/tty.SLAB_USBtoUART erase_flash
+
+# Write the previously downloaded micropython bin to the board
+esptool.py --chip esp32 --port /dev/tty.SLAB_USBtoUART write_flash -z 0x1000 /Users/kieran/Downloads/esp32-idf4-20210202-v1.14.bin    
+```
+
+*Sample output*
+```commandline
+esp32_testing % esptool.py --port /dev/tty.SLAB_USBtoUART erase_flash                                                                                                                 (master)esp32_testing
+esptool.py v3.0
+Serial port /dev/tty.SLAB_USBtoUART
+Connecting........_____....._
+Detecting chip type... ESP32
+Chip is ESP32-D0WD (revision 1)
+Features: WiFi, BT, Dual Core, 240MHz, VRef calibration in efuse, Coding Scheme None
+Crystal is 40MHz
+MAC: fc:f5:c4:55:4d:9c
+Uploading stub...
+Running stub...
+Stub running...
+Erasing flash (this may take a while)...
+Chip erase completed successfully in 8.6s
+Hard resetting via RTS pin...
+
+esp32_testing % esptool.py --chip esp32 --port /dev/tty.SLAB_USBtoUART write_flash -z 0x1000 /Users/kieran/Downloads/esp32-idf4-20210202-v1.14.bin                                    (master)esp32_testing
+esptool.py v3.0
+Serial port /dev/tty.SLAB_USBtoUART
+Connecting........_
+Chip is ESP32-D0WD (revision 1)
+Features: WiFi, BT, Dual Core, 240MHz, VRef calibration in efuse, Coding Scheme None
+Crystal is 40MHz
+MAC: fc:f5:c4:55:4d:9c
+Uploading stub...
+Running stub...
+Stub running...
+Configuring flash size...
+Compressed 1484624 bytes to 951640...
+Wrote 1484624 bytes (951640 compressed) at 0x00001000 in 84.1 seconds (effective 141.1 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
+```
+
+You should now be able to connect to your board and run micropython. Run the following command to connect:
+```
+screen /dev/tty.SLAB_USBtoUART 115200
+```
+This should allow you to interact with the micropython REPL on your board. 
+ 
 ### Run your python file on the ESP32
 
-Similar to Arduino we need to upload our files to the ESP32. I found `ampy` to be a good basic option. Adafruit have provided a 
-nice [getting started with MicroPython](https://learn.adafruit.com/micropython-basics-load-files-and-run-code/install-ampy) that I strongly recommend having a look at.
+To copy python code to the board use `ampy`. Github repo [here](https://github.com/scientifichackers/ampy)
+```commandline
+# Install with pip
+pip install adafruit-ampy
+
+# List files on your board
+ampy --port /dev/tty.SLAB_USBtoUART ls
+```
 
 The following command runs main.py on your ERP32 
 ```commandline
-ampy --port /dev/tty.SLAB_USBtoUART run main.py
+esp32_testing % ampy --port /dev/tty.SLAB_USBtoUART run hello.py                                                                                                                      (master)esp32_testing
+hello from inside a ESP32
 ```
 
 ### Connect to WIFI
