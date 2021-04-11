@@ -1,11 +1,20 @@
 import urequests
 import network
 import time
+import ujson
 
-SSID = '<ROUTER_SSID>'  # Add your Routers name here
-PASSWORD = '<ROUTER_PASSWORD>'  # Add your Routers password here
-SERVER_IP = '192.168.8.103'  # Update with your laptops IP
-SERVER_PORT = '5000'  # Update with Flask servers port
+
+def get_credentials(fname='credentials.json'):
+    with open(fname) as f:
+        return ujson.loads(f.read())
+
+
+credentials = get_credentials()
+
+SSID = credentials['SSID']
+PASSWORD = credentials['PASSWORD']
+SERVER_IP = credentials['IP']
+SERVER_PORT = credentials['PORT']
 SERVER_URL = 'http://{SERVER_IP}:{SERVER_PORT}/{ENDPOINT}'
 
 

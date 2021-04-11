@@ -140,12 +140,30 @@ One main reason I bought the ESP32 is to have it interfacing with a web server r
 provide constant feedback of some description. A basic `Flask` server is provided in [app.py](iot_server/app.py).
 This simple `Flask` server allows an ESP32 to register with the web server. Each ESP32 can then send updates to the server.
 
-Update the following variables in [contact_server.py](contact_server.py)
+1. Create a `credentials.json` file and copy it to your ESP32
+```commandline
+{
+  "SSID" : "XXXXX",
+  "PASSWORD": "XXXXX",
+  "IP": "192.168.8.103",
+  "PORT": "5000"
+}
 ```
-SSID = '<ROUTER_SSID>'  # Add your Routers name here
-PASSWORD = '<ROUTER_PASSWORD>'  # Add your Routers password here
-SERVER_IP = '192.168.8.103'  # Update with your laptops IP
-SERVER_PORT = '5000'  # Update with Flask servers port
+Where: `SSID` is your routers name; `PASSWORD` is your routers password; `IP` is your laptops ip address;
+`PORT` is the port of the flask web server
+
+Copy the newly created file
+```commandline
+ ampy --port /dev/tty.SLAB_USBtoUART put credentials.json credentials.json
+```
+
+The credentials file can be read and stored in a dict
+```python
+def get_credentials(fname='credentials.json'):
+    with open(fname) as f:
+        return ujson.loads(f.read())
+
+credentials = get_credentials()
 ```
 
 Copy [contact_server.py](contact_server.py) to your ESP32 and then start up the flask app. 
