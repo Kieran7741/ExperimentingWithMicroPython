@@ -88,7 +88,7 @@ pip install adafruit-ampy
 ampy --port /dev/tty.SLAB_USBtoUART ls
 ```
 
-The following command runs main.py on your ERP32 
+The following command runs [hello.py](hello.py) on your ESP32 
 ```commandline
 ampy --port /dev/tty.SLAB_USBtoUART run hello.py                                                                                                                      (master)esp32_testing
 hello from inside a ESP32
@@ -179,7 +179,6 @@ def register_device():
 ``` 
 
 The ESP32 can then register with the Flask server and update its status every 5 seconds.
-**Note**: 
 
 ```python
 if __name__ == '__main__':
