@@ -5,6 +5,8 @@ the perfect starting point. I have previously messed around with Arduinos while 
 
 The aim for this repo is to document my experimentation with MicroPython and hopefully create some cool projects.
 
+Make sure to clone this repo: `git clone https://github.com/Kieran7741/ExperimentingWithMicroPython.git`
+
 ### Setting up your enviornment to work with ESP32 on Mac
 
 The following driver needs to be installed to communicate with the ESP32 on Mac: 
@@ -88,7 +90,7 @@ ampy --port /dev/tty.SLAB_USBtoUART ls
 
 The following command runs main.py on your ERP32 
 ```commandline
-esp32_testing % ampy --port /dev/tty.SLAB_USBtoUART run hello.py                                                                                                                      (master)esp32_testing
+ampy --port /dev/tty.SLAB_USBtoUART run hello.py                                                                                                                      (master)esp32_testing
 hello from inside a ESP32
 ```
 
@@ -134,11 +136,34 @@ def get(endpoint):
 
 ### Sending requests to a locally running Flask server
 
-One main reason I bought the Esp32 is to have it interfacing with a web server running on a Raspberry Pi to 
-provide constant feedback of some description. A basic Flask server is provided in [app.py](iot_server/app.py).
-Code to run on an ESP32 is shown in [contact_server.py](contact_server.py)
+One main reason I bought the ESP32 is to have it interfacing with a web server running on a Raspberry Pi to 
+provide constant feedback of some description. A basic `Flask` server is provided in [app.py](iot_server/app.py).
+This simple `Flask` server allows an ESP32 to register with the web server. Each ESP32 can then send updates to the server.
 
-The server allows a device to register with it and assigns it a UUID to be used in later requests
+Copy [contact_server.py](contact_server.py) to your ESP32 and then start up the flask app(Update with SSID and Password of your router). 
+**Note**: Make sure you have Flask installed: `pip install flask`
+```commandline
+# Copy contact_server.py to ESP32:
+ampy --port /dev/tty.SLAB_USBtoUART put contact_server.py main.py
+# Start web server
+cd iot_server && python app.py
+```
+```commandline
+# Device 1 registering with the server
+192.168.8.109 - - [11/Apr/2021 10:04:08] "GET /register HTTP/1.0" 200 -
+# Device 1 sending update
+192.168.8.109 - - [11/Apr/2021 10:04:08] "GET /status_update/d6eaeced-4634-45a7-90cb-05a6eeea74f0 HTTP/1.0" 200 -
+192.168.8.109 - - [11/Apr/2021 10:04:13] "GET /status_update/d6eaeced-4634-45a7-90cb-05a6eeea74f0 HTTP/1.0" 200 -
+# Device 2 registering with the server
+192.168.8.108 - - [11/Apr/2021 10:04:16] "GET /register HTTP/1.0" 200 -
+192.168.8.109 - - [11/Apr/2021 10:04:18] "GET /status_update/d6eaeced-4634-45a7-90cb-05a6eeea74f0 HTTP/1.0" 200 -
+# Device 2 sending update
+192.168.8.108 - - [11/Apr/2021 10:04:19] "GET /status_update/20e572db-438e-4245-8660-d72d035243fc HTTP/1.0" 200 -
+192.168.8.109 - - [11/Apr/2021 10:04:24] "GET /status_update/d6eaeced-4634-45a7-90cb-05a6eeea74f0 HTTP/1.0" 200 -
+192.168.8.108 - - [11/Apr/2021 10:04:24] "GET /status_update/20e572db-438e-4245-8660-d72d035243fc HTTP/1.0" 200 -
+```
+
+The server allows a device to register and assigns it a UUID to be used in later requests
 
 ```python
 @app.route('/register', methods=['POST'])
@@ -154,15 +179,19 @@ def register_device():
 ``` 
 
 The ESP32 can then register with the Flask server and update its status every 5 seconds.
-**Note**: These example are very basic/
+**Note**: 
 
 ```python
 if __name__ == '__main__':
-
     connect_wifi('some_ssid', 'some_password')
-
     uuid = register()
     while True:
         get(SERVER_URL.format(endpoint='status_update/{0}'.format(uuid)))
         time.sleep(5)
 ```
+
+#### View registered devices in your Browser
+
+Visit [http://0.0.0.0:5000/](http://0.0.0.0:5000/) to view all registered devices
+
+![Browser](./images/Registered_devices.png)

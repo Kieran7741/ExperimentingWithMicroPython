@@ -13,7 +13,7 @@ def temperature(temp):
     return str({'statue': 'ok'})
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/register')
 def register_device():
     """
     Register device data with the server
@@ -25,7 +25,7 @@ def register_device():
     return jsonify(device_details)
 
 
-@app.route('/devices')
+@app.route('/')
 def display_devices():
     return render_template('devices.html', devices=devices)
 
@@ -49,5 +49,5 @@ def test():
 
 
 if __name__ == '__main__':
-
-    app.run(host='192.168.8.103', port=5000)
+    # Spin up server available to all devices on your local network
+    app.run("0.0.0.0", port=5000, debug=True)

@@ -27,7 +27,7 @@ def connect_wifi(ssid, password):
 
 
 def register():
-    response = urequests.post(SERVER_URL.format(endpoint='register'))
+    response = urequests.get(SERVER_URL.format(endpoint='register'))
     uuid = response.json()['device_id']
     return uuid
 
@@ -44,5 +44,8 @@ if __name__ == '__main__':
 
     uuid = register()
     while True:
-        get(SERVER_URL.format(endpoint='status_update/{0}'.format(uuid)))
+        try:
+            get(SERVER_URL.format(endpoint='status_update/{0}'.format(uuid)))
+        except:
+            pass
         time.sleep(5)

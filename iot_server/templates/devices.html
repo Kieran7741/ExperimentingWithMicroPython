@@ -2,5 +2,9 @@
 <title>Devices</title>
 
 <body>
-    {{devices}}
+    <pre id="device_json"></pre>
+    <script>
+        const devices = {{devices|tojson}}
+        document.getElementById("device_json").innerHTML = JSON.stringify(devices, undefined, 2)
+    </script>
 </body>
