@@ -131,7 +131,7 @@ def get(endpoint):
     return res
 ```
 
-### Sending requests to a locally running Flask server
+# Sending requests to a locally running Flask server
 
 One main reason I bought the ESP32 is to have it interfacing with a web server running on a Raspberry Pi to 
 provide constant feedback of some description. A basic `Flask` server is provided in [app.py](iot_server/app.py).
@@ -222,3 +222,54 @@ if __name__ == '__main__':
 Visit [http://0.0.0.0:5000/](http://0.0.0.0:5000/) to view all registered devices
 
 ![Browser](./images/Registered_devices.png)
+
+
+# Reading Analog stick position
+
+The following code snippet outputs the x and y coordinates of a analog stick connected to the ESP32.
+**Note** The pins need to suport Analog to Digital conversion(ADC). See [analog_stick_input.py](analog_stick_input.py) for source code
+```python
+from machine import ADC, Pin
+
+
+def get_xy_analoge_inputs(x_pin, y_pin):
+    x_axis = ADC(Pin(x_pin))
+    y_axis = ADC(Pin(y_pin))
+    # Set range of voltage
+    x_axis.atten(ADC.ATTN_11DB)
+    y_axis.atten(ADC.ATTN_11DB)
+
+    return x_axis, y_axis
+
+
+if __name__ == "__main__":
+    x_pin = 33
+    y_pin = 32
+    x_axis, y_axis = get_xy_analoge_inputs(x_pin, y_pin)
+    while True:
+        print("X:" , x_axis.read(), "Y:", y_axis.read())
+```
+
+```commandline
+X: 1841 Y: 1935
+X: 1841 Y: 1935
+X: 1842 Y: 1934
+X: 1841 Y: 1934
+X: 1841 Y: 1936
+X: 1841 Y: 1934
+X: 1841 Y: 1935
+X: 1841 Y: 1934
+X: 1843 Y: 1936
+X: 1841 Y: 1933
+X: 1840 Y: 1934
+X: 1843 Y: 1934
+X: 1843 Y: 1935
+X: 1842 Y: 1933
+X: 1842 Y: 1934
+X: 1841 Y: 1935
+X: 1841 Y: 1935
+X: 1842 Y: 1935
+```
+Analog stick wiring shown below
+![Analog stick](./images/analog_stick.jpg)
+Where `GND` is connected to `ESP32 GND`; `+5V` is connected to `ESP32 3.3v`; `VRx` is connected to `ESP32 Pin 33`, `VRy` is connected to `ESP32 Pin 32`
