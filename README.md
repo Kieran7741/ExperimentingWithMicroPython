@@ -1,8 +1,5 @@
 # Experimenting with MicroPython on the ESP32
 
-Python is my main programing language and I also want to play around embedded devices. MicroPython is therefore 
-the perfect starting point. I have previously messed around with Arduinos while in college but disliked the `C` syntax. 
-
 The aim for this repo is to document my experimentation with MicroPython and hopefully create some cool projects.
 
 Make sure to clone this repo: `git clone https://github.com/Kieran7741/ExperimentingWithMicroPython.git`
@@ -152,7 +149,7 @@ This simple `Flask` server allows an ESP32 to register with the web server. Each
 Where: `SSID` is your routers name; `PASSWORD` is your routers password; `IP` is your laptops ip address;
 `PORT` is the port of the flask web server
 
-Copy the newly created file
+2. Copy the newly created file
 ```commandline
  ampy --port /dev/tty.SLAB_USBtoUART put credentials.json credentials.json
 ```
@@ -166,7 +163,7 @@ def get_credentials(fname='credentials.json'):
 credentials = get_credentials()
 ```
 
-Copy [contact_server.py](contact_server.py) to your ESP32 and then start up the flask app. 
+3. Copy [contact_server.py](contact_server.py) to your ESP32 and then start up the flask app. 
 **Note**: Make sure you have Flask installed: `pip install flask`
 ```commandline
 # Copy contact_server.py to ESP32:
