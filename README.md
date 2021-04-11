@@ -1,5 +1,7 @@
 # Experimenting with MicroPython on the ESP32
 
+![My_ESP_32](./images/my_esp32_board.jpg)
+
 The aim for this repo is to document my experimentation with MicroPython and hopefully create some cool projects.
 
 Make sure to clone this repo: `git clone https://github.com/Kieran7741/ExperimentingWithMicroPython.git`
