@@ -140,7 +140,15 @@ One main reason I bought the ESP32 is to have it interfacing with a web server r
 provide constant feedback of some description. A basic `Flask` server is provided in [app.py](iot_server/app.py).
 This simple `Flask` server allows an ESP32 to register with the web server. Each ESP32 can then send updates to the server.
 
-Copy [contact_server.py](contact_server.py) to your ESP32 and then start up the flask app(Update with SSID and Password of your router). 
+Update the following variables in [contact_server.py](contact_server.py)
+```
+SSID = '<ROUTER_SSID>'  # Add your Routers name here
+PASSWORD = '<ROUTER_PASSWORD>'  # Add your Routers password here
+SERVER_IP = '192.168.8.103'  # Update with your laptops IP
+SERVER_PORT = '5000'  # Update with Flask servers port
+```
+
+Copy [contact_server.py](contact_server.py) to your ESP32 and then start up the flask app. 
 **Note**: Make sure you have Flask installed: `pip install flask`
 ```commandline
 # Copy contact_server.py to ESP32:
