@@ -2,7 +2,11 @@ import urequests
 import network
 import time
 
-SERVER_URL = 'http://192.168.8.103:5000/{endpoint}'
+SSID = '<ROUTER_SSID>'  # Add your Routers name here
+PASSWORD = '<ROUTER_PASSWORD>'  # Add your Routers password here
+SERVER_IP = '192.168.8.103'  # Update with your laptops IP
+SERVER_PORT = '5000'  # Update with Flask servers port
+SERVER_URL = 'http://{SERVER_IP}:{SERVER_PORT}/{ENDPOINT}'
 
 
 def connect_wifi(ssid, password):
@@ -27,7 +31,7 @@ def connect_wifi(ssid, password):
 
 
 def register():
-    response = urequests.get(SERVER_URL.format(endpoint='register'))
+    response = urequests.get(SERVER_URL.format(SERVER_IP=SERVER_IP, SERVER_PORT=SERVER_PORT, ENDPOINT='register'))
     uuid = response.json()['device_id']
     return uuid
 
@@ -39,13 +43,13 @@ def get(endpoint):
 
 
 if __name__ == '__main__':
-
-    connect_wifi('some_ssid', 'some_password')
-
+    connect_wifi(SSID, PASSWORD)
     uuid = register()
+
     while True:
         try:
-            get(SERVER_URL.format(endpoint='status_update/{0}'.format(uuid)))
+            get(SERVER_URL.format(SERVER_IP=SERVER_IP, SERVER_PORT=SERVER_PORT,
+                                  ENDPOINT='status_update/{0}'.format(uuid)))
         except:
             pass
         time.sleep(5)

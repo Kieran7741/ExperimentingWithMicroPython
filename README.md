@@ -182,11 +182,16 @@ The ESP32 can then register with the Flask server and update its status every 5 
 
 ```python
 if __name__ == '__main__':
-    connect_wifi('some_ssid', 'some_password')
+    connect_wifi(SSID, PASSWORD)
     uuid = register()
     while True:
-        get(SERVER_URL.format(endpoint='status_update/{0}'.format(uuid)))
+        try:
+            get(SERVER_URL.format(SERVER_IP=SERVER_IP, SERVER_PORT=SERVER_PORT, 
+                                  ENDPOINT='status_update/{0}'.format(uuid)))
+        except:
+            pass
         time.sleep(5)
+
 ```
 
 #### View registered devices in your Browser
