@@ -229,7 +229,9 @@ Visit [http://0.0.0.0:5000/](http://0.0.0.0:5000/) to view all registered device
 # Reading Analog stick position
 
 The following code snippet outputs the x and y coordinates of a analog stick connected to the ESP32.
-**Note** The pins need to suport Analog to Digital conversion(ADC). See [analog_stick_input.py](analog_stick_input.py) for source code
+**Note** The pins connected to the analog stick need to suport Analog to Digital conversion(ADC). 
+
+See [analog_stick_input.py](analog_stick_input.py) for source code
 ```python
 from machine import ADC, Pin
 
